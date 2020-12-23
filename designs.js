@@ -1,30 +1,45 @@
+let color;
 
-var height, width, color;
+function createGrid(heightCount, widthCount) {
+    createRows(heightCount);
+    createCells(widthCount);
+}
 
-$('#sizePicker').submit(function (event) {
-    event.preventDefault();
-    height = $('#inputHeight').val();
-    width = $('#inputWidth').val();
+function createRows(heightCount) {
+    for (let i = 0; i < heightCount; i++) {
+        let $tr = document.createElement('tr');
+        document.getElementById('pixelCanvas').appendChild($tr);
+    }
+}
 
-   $('#pixelCanvas').html(''); 
-
-    makeGrid(height, width);
-    addCellClickListener();
-});
-
-function makeGrid(height, width) {
-    for(let i = 0; i < height; i++) {
-        $('#pixelCanvas'). append('<tr></tr>');
-    };
-
-    for(let j = 0; j < width; j++) {
-        $('tr').append('<td></td>');
-    };
-};
-
-function addCellClickListener() {
-    $('td').click(function addColor() {
-        color = $('#colorPicker').val();
-        $(event.currentTarget).css("background-color", color)
+function createCells(widthCount) {
+    let $rows = document.querySelectorAll('tr');
+    $rows.forEach(function($row) {
+        for (let i = 0; i < widthCount; i++ ) {
+            let $td = document.createElement('td');
+            $td.addEventListener('click', function() {
+                $td.style.backgroundColor = color;
+            });
+    
+            $row.appendChild($td);
+        }
     });
-};
+}
+
+(function onColorChange() {
+    let $colorInput = document.getElementById('colorPicker');
+    $colorInput.addEventListener('change', function() {
+        color = $colorInput.value;
+    });
+})();
+
+(function addSubmitListener(e) {
+    document.getElementById('sizePicker').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let heightCount = document.getElementById('inputHeight').value;
+        let widthCount = document.getElementById('inputWidth').value;
+        
+        document.getElementById('pixelCanvas').innerHTML = '';
+        createGrid(heightCount, widthCount);
+    });
+})();
